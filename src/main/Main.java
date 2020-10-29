@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 public class Main {
 
-
     static Board board = new Board();
 
     public static void main(String[] args) {
@@ -16,7 +15,7 @@ public class Main {
         board.showBoard();
 
         String turn = Piece.SIRO;
-        while(true) {
+        while (true) {
             System.out.println(turn + "'s turn.");
             final Scanner sc = new Scanner(System.in);
             final int x = sc.nextInt();
@@ -27,10 +26,10 @@ public class Main {
             piece.setState(turn);
 
             final boolean couldTurn = piece.canTurnOver();
-            if(!couldTurn) {
+            if (!couldTurn) {
                 System.out.println("!!!!Couldn't put piece.!!!!");
                 piece.setState(defaultState);
-                if(turn == Piece.SIRO) {
+                if (turn == Piece.SIRO) {
                     turn = Piece.KURO;
                 } else {
                     turn = Piece.SIRO;
@@ -39,7 +38,7 @@ public class Main {
 
             board.showBoard();
 
-            if(turn == Piece.SIRO) {
+            if (turn == Piece.SIRO) {
                 turn = Piece.KURO;
             } else {
                 turn = Piece.SIRO;

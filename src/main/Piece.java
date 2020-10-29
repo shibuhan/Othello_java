@@ -35,7 +35,7 @@ public class Piece {
     }
 
     public boolean isOppo(String myState) {
-        if(this.state != EMP) {
+        if (this.state != EMP) {
             return this.state != myState;
         } else {
             return false;
@@ -43,7 +43,7 @@ public class Piece {
     }
 
     public boolean isMine(String mySate) {
-        if(this.state != EMP) {
+        if (this.state != EMP) {
             return this.state == mySate;
         } else {
             return false;
@@ -68,19 +68,19 @@ public class Piece {
     public boolean turn(Piece target, int direction, int count) {
         boolean result = false;
 
-        if(target.isOppo(state)) {
+        if (target.isOppo(state)) {
             count++;
             final Piece nextTarget = target.getAround(direction);
             result = turn(nextTarget, direction, count);
 
-        } else if(target.isMine(state)) {
+        } else if (target.isMine(state)) {
             return count > 0;
 
-        } else if(target.isEmp()){
+        } else if (target.isEmp()) {
             return false;
         }
 
-        if(result) {
+        if (result) {
             target.state = this.state;
         } else {
             count = 0;
@@ -92,21 +92,21 @@ public class Piece {
     public Piece getAround(int direction) {
         switch (direction) {
         case UP:
-            return board.getPiece(x, y-1);
+            return board.getPiece(x, y - 1);
         case UP_RIGHT:
-            return board.getPiece(x+1, y-1);
+            return board.getPiece(x + 1, y - 1);
         case RIGHT:
-            return board.getPiece(x+1, y);
+            return board.getPiece(x + 1, y);
         case DOWN_RIGHT:
-            return board.getPiece(x+1, y+1);
+            return board.getPiece(x + 1, y + 1);
         case DOWN:
-            return board.getPiece(x, y+1);
+            return board.getPiece(x, y + 1);
         case DOWN_LEFT:
-            return board.getPiece(x-1, y+1);
+            return board.getPiece(x - 1, y + 1);
         case LEFT:
-            return board.getPiece(x-1, y);
+            return board.getPiece(x - 1, y);
         case UP_LEFT:
-            return board.getPiece(x-1, y-1);
+            return board.getPiece(x - 1, y - 1);
         default:
             return new Piece(-1, -1);
         }

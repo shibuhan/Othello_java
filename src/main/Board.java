@@ -5,14 +5,13 @@ import java.util.List;
 
 public class Board {
 
-
     private final List<Piece> pieces = new ArrayList<>();
 
     static Piece[][] board = new Piece[8][8];
 
     public Board() {
-        for(int i = 0; i < 8; i++) {
-            for(int j = 0; j < 8; j++) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
                 final Piece piece = new Piece(j, i);
                 board[i][j] = piece;
                 pieces.add(piece);
@@ -23,7 +22,7 @@ public class Board {
     }
 
     public Piece getPiece(int x, int y) {
-        if(x < 0 || y < 0 || x > 7 || y > 7) {
+        if (x < 0 || y < 0 || x > 7 || y > 7) {
             return new Piece(-1, -1);
         } else {
             return board[y][x];
@@ -33,18 +32,18 @@ public class Board {
     public void showBoard() {
         System.out.println();
 
-        for(int i = 0; i < 9; i++) {
-            if(i == 0) {
+        for (int i = 0; i < 9; i++) {
+            if (i == 0) {
                 System.out.print("  ");
             } else {
-                System.out.print(i-1 + " ");
+                System.out.print(i - 1 + " ");
             }
 
-            for(int j = 0; j < 8; j++) {
-                if(i == 0) {
+            for (int j = 0; j < 8; j++) {
+                if (i == 0) {
                     System.out.print(j + " ");
                 } else {
-                    System.out.print(board[i-1][j].getState());
+                    System.out.print(board[i - 1][j].getState());
                 }
             }
             System.out.println();
