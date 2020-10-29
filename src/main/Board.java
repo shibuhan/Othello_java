@@ -5,10 +5,13 @@ import java.util.List;
 
 public class Board {
 
+    /** コマ */
     private final List<Piece> pieces = new ArrayList<>();
-
     static Piece[][] board = new Piece[8][8];
 
+    /**
+     * コンストラクタ
+     */
     public Board() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -21,6 +24,12 @@ public class Board {
         pieces.forEach(p -> p.setBoard(this));
     }
 
+    /**
+     * 座標を指定してコマを取得する
+     * @param x x座標
+     * @param y y座標
+     * @return コマ
+     */
     public Piece getPiece(int x, int y) {
         if (x < 0 || y < 0 || x > 7 || y > 7) {
             return new Piece(-1, -1);
@@ -29,6 +38,9 @@ public class Board {
         }
     }
 
+    /**
+     * 盤を表示させます
+     */
     public void showBoard() {
         System.out.println();
 

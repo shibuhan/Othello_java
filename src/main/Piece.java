@@ -6,10 +6,12 @@ import java.util.stream.Collectors;
 
 public class Piece {
 
+    /** コマの状態を表す定数 */
     public static final String EMP = "- ";
     public static final String SIRO = "○ ";
     public static final String KURO = "● ";
 
+    /** コマの方向を表す定数 */
     public static final int UP = 1;
     public static final int UP_RIGHT = 2;
     public static final int RIGHT = 3;
@@ -21,11 +23,14 @@ public class Piece {
     public static final List<Integer> DIRECTION_LIST = Arrays.asList(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT,
         LEFT, UP_LEFT);
 
+    /** 座標 */
     private final int x;
     private final int y;
 
+    /** 状態 */
     private String state;
 
+    /** 盤 */
     private Board board;
 
     public Piece(int x, int y) {
@@ -34,6 +39,11 @@ public class Piece {
         this.state = EMP;
     }
 
+    /**
+     * 手番のプレイヤーから見てこのコマが相手のコマかどうか判定します
+     * @param myState 手番のプレイヤーの状態
+     * @return このコマが相手のコマかどうか
+     */
     public boolean isOppo(String myState) {
         if (this.state != EMP) {
             return this.state != myState;
@@ -42,6 +52,11 @@ public class Piece {
         }
     }
 
+    /**
+     * 手番のプレイヤーから見てこのコマが自分のコマかどうか判定します
+     * @param mySate 手番のプレイヤーの状態
+     * @return このコマが自分のコマかどうか
+     */
     public boolean isMine(String mySate) {
         if (this.state != EMP) {
             return this.state == mySate;
@@ -50,10 +65,18 @@ public class Piece {
         }
     }
 
+    /**
+     * このコマがまだ置かれていないかどうか判定します
+     * @return このコマがまだ置かれていないかどうか
+     */
     public boolean isEmp() {
         return this.state == EMP;
     }
 
+    /**
+     * このコマの周りを見て、可能であれば相手のコマをひっくり返します<br>
+     * @return 一つ以上ひっくり返せたかどうか
+     */
     public boolean canTurnOver() {
         final boolean couldTurn = DIRECTION_LIST.stream().map(d -> {
             final Piece target = getAround(d);
@@ -65,6 +88,13 @@ public class Piece {
         return couldTurn;
     }
 
+    /**
+     * このコマから見て、指定の方向に進み相手のコマをひっくり返します
+     * @param target 指定の方向の隣り合うコマ
+     * @param direction 方向
+     * @param count 見たコマの個数
+     * @return その方向で一つ以上相手のコマをひっくり返せたかどうか
+     */
     public boolean turn(Piece target, int direction, int count) {
         boolean result = false;
 
@@ -89,6 +119,11 @@ public class Piece {
         return count > 0;
     }
 
+    /**
+     * このコマから見て指定の方向の隣り合うコマを取得します
+     * @param direction 方向
+     * @return 指定の方向の隣り合うコマ
+     */
     public Piece getAround(int direction) {
         switch (direction) {
         case UP:
@@ -112,14 +147,26 @@ public class Piece {
         }
     }
 
+    /**
+     * 状態を取得します
+     * @return 状態
+     */
     public String getState() {
         return state;
     }
 
+    /**
+     * 状態をセットします
+     * @param state 状態
+     */
     public void setState(String state) {
         this.state = state;
     }
 
+    /**
+     * 盤を取得します
+     * @param board 盤
+     */
     public void setBoard(Board board) {
         this.board = board;
     }
