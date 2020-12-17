@@ -1,8 +1,7 @@
 package main;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Piece extends PieceBase {
 
@@ -11,17 +10,10 @@ public class Piece extends PieceBase {
     public static final String SIRO = "○ ";
     public static final String KURO = "● ";
 
-    /** コマの方向を表す定数 */
-    public static final int UP = 1;
-    public static final int UP_RIGHT = 2;
-    public static final int RIGHT = 3;
-    public static final int DOWN_RIGHT = 4;
-    public static final int DOWN = 5;
-    public static final int DOWN_LEFT = 6;
-    public static final int LEFT = 7;
-    public static final int UP_LEFT = 8;
-    public static final List<Integer> DIRECTION_LIST = Arrays.asList(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT,
-            LEFT, UP_LEFT);
+    /** コマの方向を表す列挙型 */
+    public enum Direction {
+        UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT;
+    }
 
     /** コンストラクタ */
     public Piece(int x, int y) {
@@ -69,7 +61,7 @@ public class Piece extends PieceBase {
      * @return 一つ以上ひっくり返せたかどうか
      */
     public boolean canTurnOver() {
-        final boolean couldTurn = DIRECTION_LIST.stream().map(d -> {
+        final boolean couldTurn = Stream.of(Direction.values()).map(d -> {
             final Piece target = getAround(d);
             final boolean result = turn(target, d, 0);
             return result;
@@ -85,7 +77,7 @@ public class Piece extends PieceBase {
      * @param count 見たコマの個数
      * @return その方向で一つ以上相手のコマをひっくり返せたかどうか
      */
-    public boolean turn(Piece target, int direction, int count) {
+    public boolean turn(Piece target, Direction direction, int count) {
         boolean result = false;
 
         if (target.isOppo(getState())) {
@@ -114,7 +106,7 @@ public class Piece extends PieceBase {
      * @param direction 方向
      * @return 指定の方向の隣り合うコマ
      */
-    public Piece getAround(int direction) {
+    public Piece getAround(Direction direction) {
         switch (direction) {
         case UP:
             return getBoard().getPiece(getX(), getY() - 1);
