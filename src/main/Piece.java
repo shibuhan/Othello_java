@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Piece {
+public class Piece extends PieceBase {
 
     /** コマの状態を表す定数 */
     public static final String EMP = "- ";
@@ -23,20 +23,11 @@ public class Piece {
     public static final List<Integer> DIRECTION_LIST = Arrays.asList(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT,
         LEFT, UP_LEFT);
 
-    /** 座標 */
-    private final int x;
-    private final int y;
-
-    /** 状態 */
-    private String state;
-
-    /** 盤 */
-    private Board board;
-
+    /** コンストラクタ */
     public Piece(int x, int y) {
-        this.x = x;
-        this.y = y;
-        this.state = EMP;
+        setX(x);
+        setY(y);
+        setState(EMP);
     }
 
     /**
@@ -45,8 +36,8 @@ public class Piece {
      * @return このコマが相手のコマかどうか
      */
     public boolean isOppo(String myState) {
-        if (this.state != EMP) {
-            return this.state != myState;
+        if (getState() != EMP) {
+            return getState() != myState;
         } else {
             return false;
         }
@@ -58,8 +49,8 @@ public class Piece {
      * @return このコマが自分のコマかどうか
      */
     public boolean isMine(String mySate) {
-        if (this.state != EMP) {
-            return this.state == mySate;
+        if (getState() != EMP) {
+            return getState() == mySate;
         } else {
             return false;
         }
@@ -70,7 +61,7 @@ public class Piece {
      * @return このコマがまだ置かれていないかどうか
      */
     public boolean isEmp() {
-        return this.state == EMP;
+        return getState() == EMP;
     }
 
     /**
@@ -98,12 +89,12 @@ public class Piece {
     public boolean turn(Piece target, int direction, int count) {
         boolean result = false;
 
-        if (target.isOppo(state)) {
+        if (target.isOppo(getState())) {
             count++;
             final Piece nextTarget = target.getAround(direction);
             result = turn(nextTarget, direction, count);
 
-        } else if (target.isMine(state)) {
+        } else if (target.isMine(getState())) {
             return count > 0;
 
         } else if (target.isEmp()) {
@@ -111,7 +102,7 @@ public class Piece {
         }
 
         if (result) {
-            target.state = this.state;
+            target.setState(getState());
         } else {
             count = 0;
         }
@@ -127,47 +118,23 @@ public class Piece {
     public Piece getAround(int direction) {
         switch (direction) {
         case UP:
-            return board.getPiece(x, y - 1);
+            return getBoard().getPiece(getX(), getY() - 1);
         case UP_RIGHT:
-            return board.getPiece(x + 1, y - 1);
+            return getBoard().getPiece(getX() + 1, getY() - 1);
         case RIGHT:
-            return board.getPiece(x + 1, y);
+            return getBoard().getPiece(getX() + 1, getY());
         case DOWN_RIGHT:
-            return board.getPiece(x + 1, y + 1);
+            return getBoard().getPiece(getX() + 1, getY() + 1);
         case DOWN:
-            return board.getPiece(x, y + 1);
+            return getBoard().getPiece(getX(), getY() + 1);
         case DOWN_LEFT:
-            return board.getPiece(x - 1, y + 1);
+            return getBoard().getPiece(getX() - 1, getY() + 1);
         case LEFT:
-            return board.getPiece(x - 1, y);
+            return getBoard().getPiece(getX() - 1, getY());
         case UP_LEFT:
-            return board.getPiece(x - 1, y - 1);
+            return getBoard().getPiece(getX() - 1, getY() - 1);
         default:
             return new Piece(-1, -1);
         }
-    }
-
-    /**
-     * 状態を取得します
-     * @return 状態
-     */
-    public String getState() {
-        return state;
-    }
-
-    /**
-     * 状態をセットします
-     * @param state 状態
-     */
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    /**
-     * 盤を取得します
-     * @param board 盤
-     */
-    public void setBoard(Board board) {
-        this.board = board;
     }
 }
