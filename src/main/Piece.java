@@ -21,7 +21,7 @@ public class Piece extends PieceBase {
     public static final int LEFT = 7;
     public static final int UP_LEFT = 8;
     public static final List<Integer> DIRECTION_LIST = Arrays.asList(UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT,
-        LEFT, UP_LEFT);
+            LEFT, UP_LEFT);
 
     /** コンストラクタ */
     public Piece(int x, int y) {
@@ -73,8 +73,7 @@ public class Piece extends PieceBase {
             final Piece target = getAround(d);
             final boolean result = turn(target, d, 0);
             return result;
-        }).collect(Collectors.toList()).stream()
-            .anyMatch(result -> result);
+        }).collect(Collectors.toList()).stream().anyMatch(result -> result);
 
         return couldTurn;
     }
