@@ -1,12 +1,8 @@
 package main;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Board {
 
     /** コマ */
-    private final List<Piece> pieces = new ArrayList<>();
     static Piece[][] board = new Piece[8][8];
 
     /**
@@ -16,12 +12,10 @@ public class Board {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 final Piece piece = new Piece(j, i);
+                piece.setBoard(this);
                 board[i][j] = piece;
-                pieces.add(piece);
             }
         }
-
-        pieces.forEach(p -> p.setBoard(this));
     }
 
     /**
