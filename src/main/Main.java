@@ -21,6 +21,12 @@ public class Main {
             final int x = sc.nextInt();
             final int y = sc.nextInt();
 
+            if(x < 0 || x > 7 || y < 0 || y > 7) {
+                System.out.println("!!!!Couldn't put piece.!!!!");
+                board.showBoard();
+                continue;
+            }
+
             final Piece piece = board.getPiece(x, y);
             final String defaultState = piece.getState();
             piece.setState(turn);

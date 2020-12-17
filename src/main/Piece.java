@@ -1,6 +1,5 @@
 package main;
 
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Piece extends PieceBase {
@@ -27,7 +26,7 @@ public class Piece extends PieceBase {
      * @param myState 手番のプレイヤーの状態
      * @return このコマが相手のコマかどうか
      */
-    public boolean isOppo(String myState) {
+    public boolean isOpponents(String myState) {
         if (getState() != EMP) {
             return getState() != myState;
         } else {
@@ -57,17 +56,15 @@ public class Piece extends PieceBase {
     }
 
     /**
-     * このコマの周りを見て、可能であれば相手のコマをひっくり返します<br>
+     * このコマの周りを見て、可能であれば相手のコマをひっくり返します
      * @return 一つ以上ひっくり返せたかどうか
      */
     public boolean canTurnOver() {
-        final boolean couldTurn = Stream.of(Direction.values()).map(d -> {
+        return Stream.of(Direction.values()).map(d -> {
             final Piece target = getAround(d);
-            final boolean result = turn(target, d, 0);
+            final boolean result = turnOver(target, d, 0);
             return result;
-        }).collect(Collectors.toList()).stream().anyMatch(result -> result);
-
-        return couldTurn;
+        }).anyMatch(result -> result); // 全ての方向で1つ以上ひっくり返せたかどうか
     }
 
     /**
@@ -77,28 +74,44 @@ public class Piece extends PieceBase {
      * @param count 見たコマの個数
      * @return その方向で一つ以上相手のコマをひっくり返せたかどうか
      */
-    public boolean turn(Piece target, Direction direction, int count) {
-        boolean result = false;
+    public boolean turnOver(Piece target, Direction direction, int count) {
+        boolean canTurnOverThisDirection = false;
 
-        if (target.isOppo(getState())) {
+        // 隣り合うコマが相手のコマの場合、探索を進める。
+        if (target.isOpponents(getState())) {
             count++;
             final Piece nextTarget = target.getAround(direction);
-            result = turn(nextTarget, direction, count);
+            canTurnOverThisDirection = turnOver(nextTarget, direction, count); // 再帰呼び出しでさらに隣のコマを見る。今みている方向のコマをひっくり返してもいいかどうか呼び出し先に判断させる。
 
-        } else if (target.isMine(getState())) {
-            return count > 0;
+            // 再帰から帰る時の処理。判断結果がtrueの場合、ひっくりかえす。
+            if (canTurnOverThisDirection) {
+                target.setState(getState());
+            }
 
-        } else if (target.isEmp()) {
-            return false;
-        }
+            // 呼び出し元(前のコマ)に、判断結果を伝える。
+            return canTurnOverThisDirection;
 
-        if (result) {
-            target.setState(getState());
+        // 探索終了。最後尾のコマ。
         } else {
-            count = 0;
+            return canTurnOverThisDirection(target, count); // この方向のコマをひっくり返していいか判断する。判断を呼び出し元に返す。
         }
+    }
 
-        return count > 0;
+    /**
+     * その方向の最後尾のコマからみてその方向のコマをひっくり返していいかどうか判断します。
+     * @param target その方向の最後尾のコマ
+     * @param count 道中で見た相手のコマの数
+     * @return その方向の相手のコマをひっくり返していいかどうか
+     */
+    public boolean canTurnOverThisDirection(Piece target, int count) {
+        // 最後尾のコマが自分のものだった場合
+        if (target.isMine(getState())) {
+            return count > 0; // 呼び出し元に、この方向のコマをひっくり返していいかどうかを返す。道中に相手のコマがあったらtrue。道中でひとつも相手のコマがなかったらfalse。
+
+        // 最後尾のコマがなかった場合
+        } else {
+            return false; // 途中で相手のコマがあったかどうかにかかわらずfalseを返す。
+        }
     }
 
     /**
