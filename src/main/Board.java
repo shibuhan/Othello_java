@@ -3,7 +3,7 @@ package main;
 public class Board {
 
     /** コマ */
-    static Piece[][] board = new Piece[8][8];
+    Piece[][] board = new Piece[8][8];
 
     /**
      * コンストラクタ

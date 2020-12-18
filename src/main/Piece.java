@@ -28,6 +28,14 @@ public class Piece extends PieceBase {
     }
 
     /**
+     * このコマを選択して置けるかどうか判定します
+     * @return このコマを洗濯して置けるかどうか
+     */
+    public boolean isValid() {
+        return isEmp() && getX() != -1 && getY() != -1;
+    }
+
+    /**
      * 手番のプレイヤーから見てこのコマが相手のコマかどうか判定します
      * @param myState 手番のプレイヤーの状態
      * @return このコマが相手のコマかどうか
