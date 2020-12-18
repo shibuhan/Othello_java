@@ -4,30 +4,36 @@ import java.util.Scanner;
 
 public class Main {
 
-    static Board board = new Board();
-
+    /**
+     * mainメソッド
+     * @param args
+     */
     public static void main(String[] args) {
-        board.getPiece(3, 3).setState(Piece.KURO);
-        board.getPiece(3, 4).setState(Piece.SIRO);
-        board.getPiece(4, 3).setState(Piece.SIRO);
-        board.getPiece(4, 4).setState(Piece.KURO);
-
-        board.showBoard();
+        Board board = new Board();
+        Scanner sc;
 
         String turn = Piece.SIRO;
-        while (true) {
+        while (true) { // TODO: 終了条件の実装
+            board.showBoard();
             System.out.println(turn + "'s turn.");
-            final Scanner sc = new Scanner(System.in);
+            sc = new Scanner(System.in);
             final int x = sc.nextInt();
             final int y = sc.nextInt();
 
+            // 盤外の座標を指定された場合
             if(x < 0 || x > 7 || y < 0 || y > 7) {
                 System.out.println("!!!!Couldn't put piece.!!!!");
-                board.showBoard();
                 continue;
             }
 
             final Piece piece = board.getPiece(x, y);
+
+            // すでに取られているコマだった場合
+            if (!piece.isEmp()) {
+                System.out.println("!!!!Couldn't put piece.!!!!");
+                continue;
+            }
+
             final String defaultState = piece.getState();
             piece.setState(turn);
 
@@ -35,14 +41,8 @@ public class Main {
             if (!couldTurn) {
                 System.out.println("!!!!Couldn't put piece.!!!!");
                 piece.setState(defaultState);
-                if (turn == Piece.SIRO) {
-                    turn = Piece.KURO;
-                } else {
-                    turn = Piece.SIRO;
-                }
+                continue;
             }
-
-            board.showBoard();
 
             if (turn == Piece.SIRO) {
                 turn = Piece.KURO;
@@ -50,5 +50,7 @@ public class Main {
                 turn = Piece.SIRO;
             }
         }
+
+//        sc.close();
     }
 }

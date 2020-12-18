@@ -1,5 +1,7 @@
 package main;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Piece extends PieceBase {
@@ -14,7 +16,11 @@ public class Piece extends PieceBase {
         UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT;
     }
 
-    /** コンストラクタ */
+    /**
+     * コンストラクタ
+     * @param x x座標
+     * @param y y座標
+     */
     public Piece(int x, int y) {
         setX(x);
         setY(y);
@@ -26,7 +32,7 @@ public class Piece extends PieceBase {
      * @param myState 手番のプレイヤーの状態
      * @return このコマが相手のコマかどうか
      */
-    public boolean isOpponents(String myState) {
+    private boolean isOpponents(String myState) {
         if (getState() != EMP) {
             return getState() != myState;
         } else {
@@ -36,12 +42,12 @@ public class Piece extends PieceBase {
 
     /**
      * 手番のプレイヤーから見てこのコマが自分のコマかどうか判定します
-     * @param mySate 手番のプレイヤーの状態
+     * @param myState 手番のプレイヤーの状態
      * @return このコマが自分のコマかどうか
      */
-    public boolean isMine(String mySate) {
+    private boolean isMine(String myState) {
         if (getState() != EMP) {
-            return getState() == mySate;
+            return getState() == myState;
         } else {
             return false;
         }
@@ -60,11 +66,13 @@ public class Piece extends PieceBase {
      * @return 一つ以上ひっくり返せたかどうか
      */
     public boolean canTurnOver() {
-        return Stream.of(Direction.values()).map(d -> {
+        List<Boolean> results = Stream.of(Direction.values()).map(d -> {
             final Piece target = getAround(d);
             final boolean result = turnOver(target, d, 0);
             return result;
-        }).anyMatch(result -> result); // 全ての方向で1つ以上ひっくり返せたかどうか
+        }).collect(Collectors.toList()); // resultが一つでもtrueになった段階でanyMatchに行ってしまうので一度Listにしている。
+
+        return results.stream().anyMatch(result -> result); // 全ての方向で1つ以上ひっくり返せたかどうか。
     }
 
     /**
@@ -74,7 +82,7 @@ public class Piece extends PieceBase {
      * @param count 見たコマの個数
      * @return その方向で一つ以上相手のコマをひっくり返せたかどうか
      */
-    public boolean turnOver(Piece target, Direction direction, int count) {
+    private boolean turnOver(Piece target, Direction direction, int count) {
         boolean canTurnOverThisDirection = false;
 
         // 隣り合うコマが相手のコマの場合、探索を進める。
@@ -103,7 +111,7 @@ public class Piece extends PieceBase {
      * @param count 道中で見た相手のコマの数
      * @return その方向の相手のコマをひっくり返していいかどうか
      */
-    public boolean canTurnOverThisDirection(Piece target, int count) {
+    private boolean canTurnOverThisDirection(Piece target, int count) {
         // 最後尾のコマが自分のものだった場合
         if (target.isMine(getState())) {
             return count > 0; // 呼び出し元に、この方向のコマをひっくり返していいかどうかを返す。道中に相手のコマがあったらtrue。道中でひとつも相手のコマがなかったらfalse。
@@ -119,7 +127,7 @@ public class Piece extends PieceBase {
      * @param direction 方向
      * @return 指定の方向の隣り合うコマ
      */
-    public Piece getAround(Direction direction) {
+    private Piece getAround(Direction direction) {
         switch (direction) {
         case UP:
             return getBoard().getPiece(getX(), getY() - 1);

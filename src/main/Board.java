@@ -16,6 +16,11 @@ public class Board {
                 board[i][j] = piece;
             }
         }
+
+        getPiece(3, 3).setState(Piece.KURO);
+        getPiece(3, 4).setState(Piece.SIRO);
+        getPiece(4, 3).setState(Piece.SIRO);
+        getPiece(4, 4).setState(Piece.KURO);
     }
 
     /**
